@@ -1,0 +1,35 @@
+{
+  "name": "raam.client.js",
+  "version": "0.5.0",
+  "description": "A messaging protocol on the IOTA tangle allowing accessing of arbitrary messages in O(1)",
+  "keywords": [
+    "iota",
+    "dlt",
+    "tangle",
+    "quantum-proof",
+    "trinary",
+    "crypto",
+    "library",
+    "javascript",
+    "nodejs",
+    "API"
+  ],
+  "author": {
+    "name": "Robin Lamberti",
+    "email": "lamberti.robin@gmail.com"
+  },
+  "license": "ISC",
+  "main": "lib/raam.js",
+  "scripts": {
+    "docs": "jsdoc2md -t jsdoc2md/api.hbs lib/raam.js lib/raamReader.js > docs/api.md"
+  },
+  "dependencies": {
+    "@iota/core": "^1.0.0-beta.5",
+    "@iota/signing": "^1.0.0-beta.5",
+    "@iota/validators": "^1.0.0-beta.5"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "jsdoc-to-markdown": "^4.0.1"
+  }
+}

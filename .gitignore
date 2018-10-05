@@ -1,0 +1,6 @@
+bin/
+.vscode/
+node_modules/
+*.gz
+
+package-lock.json
