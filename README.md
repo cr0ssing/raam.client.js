@@ -4,7 +4,7 @@ enableing protected datastream access and publishing, organized in so called cha
 
 RAAM uses the same quantum proof signing scheme and hash function used in IOTA to sign transactions. 
 These techniques enable the construction of secure data channels providing data integrity and 
-authorship authenication. Furthermore the data is encrypted and, hence it is stored on the tangle, 
+authorship authentication. Furthermore the data is encrypted and, hence it is stored on the tangle, 
 immutable. By using optional passwords for a channel or for specific messages reading access can be limited
 to a specific private audience. RAAM can be used without any changes to IOTA nodes. Each message strenthens
 the IOTA network, because RAAM messages at their core are a set of zero-value transactions, confirming other 
@@ -54,7 +54,7 @@ Since the winternitz signing scheme used in IOTA creates one time signatures, yo
 multiple messages. A reader can verify the integrity of a message by using the verifying key included in the message.
 
 A reader can also verify, that a message has the same author than all other messages in the channel, which
-is called authenication. For that, RAAM uses a merkle tree signing scheme, where the verifying keys of all messages in 
+is called authentication. For that, RAAM uses a merkle tree signing scheme, where the verifying keys of all messages in 
 a channel are the leafs of the tree. From all verifying keys the root of the tree, the merkle root, is constructed, which 
 acts as the id for a RAAM channel. 
 
