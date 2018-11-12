@@ -26,6 +26,14 @@ this instance for later use. This way, queries to a node are minimized.</p>
 <dt><a href="#ReadCallback">ReadCallback</a> : <code>function</code></dt>
 <dd><p>Callback function that is called after each message request.</p>
 </dd>
+<dt><a href="#Subscription">Subscription</a> : <code>object</code></dt>
+<dd><p>An object containing information about the created subscription, including the 
+function to end the subscription.</p>
+</dd>
+<dt><a href="#SingleSubscription">SingleSubscription</a> : <code>object</code></dt>
+<dd><p>An object containing information about the created subscription, including the 
+function to end the subscription.</p>
+</dd>
 <dt><a href="#SingleResult">SingleResult</a> : <code>object</code></dt>
 <dd><p>Container class for the result of a single fetched message.</p>
 </dd>
@@ -48,6 +56,7 @@ This class is used to publish messages in a RAAM channel. It also provides the m
         * [.publish(message, [options])](#RAAM+publish) ⇒ <code>Promise</code>
         * [.syncChannel([options])](#RAAMReader+syncChannel) ⇒ <code>Promise</code>
         * [.fetch([options])](#RAAMReader+fetch) ⇒ <code>Promise</code>
+        * [.subscribe(callback, [options])](#RAAMReader+subscribe) ⇒ [<code>Subscription</code>](#Subscription)
     * _static_
         * [.fromSeed(seed, [options])](#RAAM.fromSeed) ⇒ <code>Promise</code>
         * [.fromFile(fileName, [options])](#RAAM.fromFile) ⇒ [<code>RAAM</code>](#RAAM)
@@ -113,10 +122,34 @@ Reads a single message with given index or an amount of messages by giving start
 | --- | --- | --- |
 | [options] | <code>Object</code> | Optional parameters. |
 | [options.iota] | <code>API</code> | A composed IOTA API for communication with a full node. |
-| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too index is not used. |
+| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too, index is not used. |
 | [options.start] | <code>number</code> | The start index in the channel of the messages to fetch. If start and index aren't set start is 0. |
 | [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
 | [options.callback] | [<code>ReadCallback</code>](#ReadCallback) | Callback function that is called after each message request. |
+| [options.messagePassword] | <code>Trytes</code> | The default message password which will be used to decrypt  all found messages. |
+| [options.messagePasswords] | <code>Array.&lt;Trytes&gt;</code> | An array containing different message passwords for  different messages. The ith element is the password for the ith message in the channel. |
+
+<a name="RAAMReader+subscribe"></a>
+
+### raam.subscribe(callback, [options]) ⇒ [<code>Subscription</code>](#Subscription)
+Subscribes to a given set of messages in the channel. A callback will be called when a message arrives.Subscriptions to messages already present locally are omitted and a callback is not called for them. Thearriving messages are stored locally. For reacting to new arriving messages a ZMQ stream of an IOTA full node is listened. The URL to it can be passed.If it's not passed the last one is used. There can be only a connection to one ZMQ stream at a time. The connectionis established if the first subscription is created and closed when all subscriptions have been cancelled.
+
+**Kind**: instance method of [<code>RAAM</code>](#RAAM)  
+**Returns**: [<code>Subscription</code>](#Subscription) - An object containing information about the created subscription, including the function to end the subscription.  
+**Throws**:
+
+- <code>Error</code> if the serverURL is not passed and hasn't been set already.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | [<code>ReadCallback</code>](#ReadCallback) | The callback that is called if a subscribed message arrives. |
+| [options] | <code>Object</code> | Optional parameters. |
+| [options.serverURL] | <code>String</code> | The URL for the ZMQ stream of an IOTA full node. Is used iff not connected to another ZMQ stream already. The URL needs to be passed at least once, because there is no default. |
+| [options.index] | <code>number</code> | The index in the channel of the message to subscribe to.  If start is set too, index is not used. |
+| [options.start] | <code>number</code> | The start index in the channel of the messages to subscribe to. If start and index aren't set start is the first index where no message is present locally. |
+| [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
+| [options.subscribeFollowing] | <code>boolean</code> | if set to true, when a subscribed message arrives, the  next message will be subscribed, if it's not already present locally and not yet subscribed. |
 | [options.messagePassword] | <code>Trytes</code> | The default message password which will be used to decrypt  all found messages. |
 | [options.messagePasswords] | <code>Array.&lt;Trytes&gt;</code> | An array containing different message passwords for  different messages. The ith element is the password for the ith message in the channel. |
 
@@ -175,9 +208,11 @@ This class is used to read messages from a RAAM channel. Any instance stores rea
     * _instance_
         * [.syncChannel([options])](#RAAMReader+syncChannel) ⇒ <code>Promise</code>
         * [.fetch([options])](#RAAMReader+fetch) ⇒ <code>Promise</code>
+        * [.subscribe(callback, [options])](#RAAMReader+subscribe) ⇒ [<code>Subscription</code>](#Subscription)
     * _static_
         * [.fetchMessages(iota, channelRoot, [options])](#RAAMReader.fetchMessages) ⇒ <code>Promise</code>
         * [.fetchSingle(iota, channelRoot, index, [options])](#RAAMReader.fetchSingle) ⇒ <code>Promise</code>
+        * [.subscribeIndex(channelRoot, index, callback, [options])](#RAAMReader.subscribeIndex) ⇒ [<code>Subscription</code>](#Subscription)
 
 <a name="new_RAAMReader_new"></a>
 
@@ -221,10 +256,34 @@ Reads a single message with given index or an amount of messages by giving start
 | --- | --- | --- |
 | [options] | <code>Object</code> | Optional parameters. |
 | [options.iota] | <code>API</code> | A composed IOTA API for communication with a full node. |
-| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too index is not used. |
+| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too, index is not used. |
 | [options.start] | <code>number</code> | The start index in the channel of the messages to fetch. If start and index aren't set start is 0. |
 | [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
 | [options.callback] | [<code>ReadCallback</code>](#ReadCallback) | Callback function that is called after each message request. |
+| [options.messagePassword] | <code>Trytes</code> | The default message password which will be used to decrypt  all found messages. |
+| [options.messagePasswords] | <code>Array.&lt;Trytes&gt;</code> | An array containing different message passwords for  different messages. The ith element is the password for the ith message in the channel. |
+
+<a name="RAAMReader+subscribe"></a>
+
+### raamReader.subscribe(callback, [options]) ⇒ [<code>Subscription</code>](#Subscription)
+Subscribes to a given set of messages in the channel. A callback will be called when a message arrives.Subscriptions to messages already present locally are omitted and a callback is not called for them. Thearriving messages are stored locally. For reacting to new arriving messages a ZMQ stream of an IOTA full node is listened. The URL to it can be passed.If it's not passed the last one is used. There can be only a connection to one ZMQ stream at a time. The connectionis established if the first subscription is created and closed when all subscriptions have been cancelled.
+
+**Kind**: instance method of [<code>RAAMReader</code>](#RAAMReader)  
+**Returns**: [<code>Subscription</code>](#Subscription) - An object containing information about the created subscription, including the function to end the subscription.  
+**Throws**:
+
+- <code>Error</code> if the serverURL is not passed and hasn't been set already.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | [<code>ReadCallback</code>](#ReadCallback) | The callback that is called if a subscribed message arrives. |
+| [options] | <code>Object</code> | Optional parameters. |
+| [options.serverURL] | <code>String</code> | The URL for the ZMQ stream of an IOTA full node. Is used iff not connected to another ZMQ stream already. The URL needs to be passed at least once, because there is no default. |
+| [options.index] | <code>number</code> | The index in the channel of the message to subscribe to.  If start is set too, index is not used. |
+| [options.start] | <code>number</code> | The start index in the channel of the messages to subscribe to. If start and index aren't set start is the first index where no message is present locally. |
+| [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
+| [options.subscribeFollowing] | <code>boolean</code> | if set to true, when a subscribed message arrives, the  next message will be subscribed, if it's not already present locally and not yet subscribed. |
 | [options.messagePassword] | <code>Trytes</code> | The default message password which will be used to decrypt  all found messages. |
 | [options.messagePasswords] | <code>Array.&lt;Trytes&gt;</code> | An array containing different message passwords for  different messages. The ith element is the password for the ith message in the channel. |
 
@@ -241,7 +300,7 @@ Reads a single message with given index or an amount of messages by giving start
 | iota | <code>API</code> | A composed IOTA API for communication with a full node. |
 | channelRoot | <code>Int8Array</code> | The channel root by that the channel is identified as trits. |
 | [options] | <code>Object</code> | Optional parameters. |
-| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too index is not used. |
+| [options.index] | <code>number</code> | The index in the channel of the message to fetch.  If start is set too, index is not used. |
 | [options.start] | <code>number</code> | The start index in the channel of the messages to fetch. If start and index aren't set start is 0. |
 | [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
 | [options.channelPassword] | <code>Trytes</code> | The optional password for the channel as trytes. |
@@ -265,8 +324,31 @@ Reads a single message with given index from the channel with the given channel 
 | channelRoot | <code>Int8Array</code> | The channel root by that the channel is identified as trits. |
 | index | <code>number</code> | The index in the channel of the message to fetch.  If start is set too index is not used. |
 | [options] | <code>Object</code> | Optional parameters. |
-| [options.start] | <code>number</code> | The start index in the channel of the messages to fetch. If start and index aren't set start is 0. |
-| [options.end] | <code>number</code> | The end index in the channel of the messages to fetch. If end is undefined messages will be fetched until an index where no message is found is reached. |
+| [options.channelPassword] | <code>Trytes</code> | The optional password for the channel as trytes. |
+| [options.messagePassword] | <code>Trytes</code> | The message password which will be used to decrypt  the found message. |
+| [options.security] | <code>number</code> | The security of the signing and encryption keys as a number between 1 and 4.  This is parameter is only used as an extra verification information. |
+| [options.height] | <code>number</code> | The height as a number between 2 and 26 of the channel yielding the maximum  amount of messages of the channel. This is parameter is only used as an extra verification information. |
+
+<a name="RAAMReader.subscribeIndex"></a>
+
+### RAAMReader.subscribeIndex(channelRoot, index, callback, [options]) ⇒ [<code>Subscription</code>](#Subscription)
+Subscribes to a given index in a RAAM channel. A callback will be called when a message arrives.For reacting to new arriving messages a ZMQ stream of an IOTA full node is listened. The URL to it can be passed.If it's not passed the last one is used. There can be only a connection to one ZMQ stream at a time. The connectionis established if the first subscription is created and closed when all subscriptions have been cancelled.
+
+**Kind**: static method of [<code>RAAMReader</code>](#RAAMReader)  
+**Returns**: [<code>Subscription</code>](#Subscription) - An object containing information about the created subscription, including the function to end the subscription.  
+**Throws**:
+
+- <code>Error</code> if the serverURL is not passed and hasn't been set already.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| channelRoot | <code>Int8Array</code> | The channel root by that the channel is identified as trits. |
+| index | <code>number</code> | The index in the channel of the message to subscribe to. |
+| callback | [<code>ReadCallback</code>](#ReadCallback) | The callback that is called if a subscribed message arrives. |
+| [options] | <code>Object</code> | Optional parameters. |
+| [options.serverURL] | <code>String</code> | The URL for the ZMQ stream of an IOTA full node. Is used iff not connected to another ZMQ stream already. The URL needs to be passed at least once, because there is no default. |
+| [options.subscribeFollowing] | <code>boolean</code> | if set to true, when a subscribed message arrives, the  next message will be subscribed. |
 | [options.channelPassword] | <code>Trytes</code> | The optional password for the channel as trytes. |
 | [options.messagePassword] | <code>Trytes</code> | The message password which will be used to decrypt  the found message. |
 | [options.security] | <code>number</code> | The security of the signing and encryption keys as a number between 1 and 4.  This is parameter is only used as an extra verification information. |
@@ -323,9 +405,42 @@ Callback function that is called after each message request.
 | Param | Type | Description |
 | --- | --- | --- |
 | error | <code>Error</code> | Error that occured while getting the message iff any. |
+| index | <code>number</code> | The index of the message. |
 | message | <code>Trytes</code> | The fetched message if the request was successful. |
 | skipped | <code>Array.&lt;object&gt;</code> | An array containing skipped bundles that  were found at the same address that the message has. Elements <code>{bundle, error}</code> contain  the bundle hash and the error causing the skipping. |
 | nextRoot | <code>Int8Array</code> | The nextRoot of the message iff any. |
+
+<a name="Subscription"></a>
+
+## Subscription : <code>object</code>
+An object containing information about the created subscription, including the function to end the subscription.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| start | <code>number</code> | The start index in the channel of the subscribed messages. |
+| end | <code>number</code> | The end index in the channel of the subscribed messages. |
+| subscribeFollowing | <code>boolean</code> | whether the following index will be subscribed when a message arrives and is not yet present locally or subscribed. |
+| callback | [<code>ReadCallback</code>](#ReadCallback) | The callback that is called if a subscribed message arrives. |
+| unsubscribe | <code>function</code> | When called the subscription to all specified indexes will be ended. |
+
+<a name="SingleSubscription"></a>
+
+## SingleSubscription : <code>object</code>
+An object containing information about the created subscription, including the function to end the subscription.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | The index of the currently subscribed message. |
+| channelRoot | <code>Int8Array</code> | The channel root by that the channel is identified as trits. |
+| subscribeFollowing | <code>boolean</code> | whether the following index will be subscribed when a message arrives. |
+| callback | [<code>ReadCallback</code>](#ReadCallback) | The callback that is called if a subscribed message arrives. |
+| unsubscribe | <code>function</code> | When called the current subscription will be ended. |
 
 <a name="SingleResult"></a>
 
@@ -356,7 +471,6 @@ Conainer class for the result of a fetch request.
 | errors | <code>Array.&lt;Error&gt;</code> | Array of errors that occured while fetching messages. |
 | skipped | <code>Array.&lt;Array.&lt;object&gt;&gt;</code> | An array containing skipped bundles that  were found at the same addresses that the messages have. Elements are arrays containing objects <code>{bundle, error}</code> consisting of the bundle hash and the error causing the skipping. If no bundles where skipped for a message the array element is empty. |
 | branches | <code>Array.&lt;Int8Array&gt;</code> | The nextRoot, iff any, provided by a certain message. |
-
 
 * * * 
 

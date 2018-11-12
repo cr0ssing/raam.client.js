@@ -26,7 +26,8 @@
   "dependencies": {
     "@iota/core": "^1.0.0-beta.5",
     "@iota/signing": "^1.0.0-beta.5",
-    "@iota/validators": "^1.0.0-beta.5"
+    "@iota/validators": "^1.0.0-beta.5",
+    "zeromq": "^5.1.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
