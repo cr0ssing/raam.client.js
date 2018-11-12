@@ -10,7 +10,7 @@ const iota = require('@iota/core').composeAPI({
         const messagePasswords = ["KUCHEN", "MEHRKUCHEN", "NOCHMEHRKUCHEN"]
         const seed = generateSeed()
         console.log("Seed:", seed)
-        const raam = await RAAM.fromSeed(seed, {amount: 4, iota, security: 1, channelPassword: "PASSWORD"})
+        const raam = await RAAM.fromSeed(seed, {amount: 4, iota, security: 2, channelPassword: "PASSWORD"})
 
         console.log("Generated RAAM channel. Reading channel...")
         const {messages, errors} = await raam.syncChannel({

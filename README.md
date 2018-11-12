@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/raam.client.js.svg)](https://www.npmjs.com/package/raam.client.js)
+
 # RAAM - Random Access Authenticated Messaging
 RAAM is a second layer data communication protocol for IOTA
 enableing protected datastream access and publishing, organized in so called channels.
@@ -12,6 +14,16 @@ transactions on the tangle.
 
 The messages in a channel don't have to be accessed from first to last, but can be accessed in any random order in O(1).
 For that only the channel id and the index of the message are needed.
+
+**Features**
+- [x] indexed messages
+- [x] access of arbitrary messages in O(1)
+- [x] authentication (proof of authorship) and spam protection of channels
+- [x] 4 different security levels
+- [x] private mode with channel password
+- [x] encrypting different messages with different passwords
+- [x] subscribing to new messages in channel
+- [x] channel branching
 
 RAAM enables messaging for a variety of use cases which need privacy and integrity for data communication. This includes
 M2M communication for the IoT in consumer electronics as well as in machines in industrial contexts, such as
