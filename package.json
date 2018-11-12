@@ -1,6 +1,6 @@
 {
   "name": "raam.client.js",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A messaging protocol for the IOTA tangle allowing access of arbitrary messages in O(1)",
   "keywords": [
     "iota",
