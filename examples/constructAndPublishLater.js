@@ -1,5 +1,5 @@
 const RAAM = require('../lib/raam')
-const converter =  require("@iota/converter")
+const prettify = require('../lib/helpers').prettify
 const RAAMReader = require('../lib/raamReader')
 const iota = require('@iota/core').composeAPI({
     provider: 'https://nodes.devnet.iota.org'
@@ -7,7 +7,6 @@ const iota = require('@iota/core').composeAPI({
 
 (async () => {
     try {
-        const messagePasswords = ["KUCHEN", "MEHRKUCHEN", "NOCHMEHRKUCHEN"]
         const seed = generateSeed()
         console.log("Seed:", seed)
         const raam = await RAAM.fromSeed(seed, {amount: 4, iota, security: 2, channelPassword: "PASSWORD"})
@@ -19,37 +18,32 @@ const iota = require('@iota/core').composeAPI({
                 if (err) {
                     console.error(err)
                 }
-            },
-            messagePasswords
+            }
         })
         errors.forEach(e => console.error(e))
         console.log("Cursor:", raam.cursor)
         console.log("Messages:", messages)
 
-        console.log("Publishing 2 messages...")
-        console.log("Bundle 1:", await raam.publish("HELLOIOTA", {messagePassword: messagePasswords[0]}))
-        const {channelRoot: nextRoot} = await RAAM.fromSeed(generateSeed(), {security: 1, height: 2})
-        console.log("Bundle 2:", await raam.publish("", {index: 3, messagePassword: messagePasswords[2], nextRoot}))
+        console.log("Creating 2 messages...")
+        const mt1 = raam.createMessageTransfers("HELLOIOTA")
+        console.log("MessageTransfers 1:", {
+            message: prettify(mt1.message), 
+            transfers: mt1.transfers
+        })
+        const mt2 = raam.createMessageTransfers("", {index: 3})
 
-        let response = await raam.fetch({end: 3, messagePasswords})
+        let response = await raam.fetch({end: 3})
         response.errors.forEach(e => console.error(e))
-        console.log("Messages:", response.messages)
-        
-        const branch = new RAAMReader(response.branches[3], {iota})
-        console.log("Branch security:", branch.security)
-        response = await branch.syncChannel()
-        console.log("Branch messages:", response.messages)
+        console.log("Published Messages:", response.messages)
+
+        console.log("Publishing created messages...")
+        console.log("Bundle 1:", await raam.publishMessageTransfers(mt1.transfers, {message: mt1.message}))
+        console.log("Bundle 2:", await raam.publishMessageTransfers(mt2.transfers, {message: mt2.message}))
 
         const reader = new RAAMReader(raam.channelRoot, {iota, channelPassword: "PASSWORD"})
-        response = await reader.fetch({start: 1, messagePasswords})
+        response = await reader.fetch({end: 3})
         response.errors.forEach(e => console.error(e))
         console.log("Messages:", response.messages)
-
-        console.log("Bundle 3:", await raam.publish("SECONDMESSAGE", {index: 1, messagePassword: messagePasswords[1]}))
-
-        
-        response = await reader.fetch({index: 1, messagePasswords})
-        console.log("Message:", response.messages)
     } catch(e) {
         console.error(e)
     }

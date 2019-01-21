@@ -20,6 +20,12 @@ this instance for later use. This way, queries to a node are minimized.</p>
 <dt><a href="#Node">Node</a> : <code>object</code></dt>
 <dd><p>An object representing a node of a merkle tree with a hash, and the position of the node by height and index.</p>
 </dd>
+<dt><a href="#MessageTransfers">MessageTransfers</a> : <code>object</code></dt>
+<dd><p>An object representing a message as transfers for a iota transaction bundle.</p>
+</dd>
+<dt><a href="#Message">Message</a> : <code>object</code></dt>
+<dd><p>An object representing the compiled RAAM message with all neccessary information to create its transfers.</p>
+</dd>
 <dt><a href="#ProgressCallback">ProgressCallback</a> : <code>function</code></dt>
 <dd><p>Callback function that is called after a given timeout to report the progress in channel creation.</p>
 </dd>
@@ -53,6 +59,8 @@ This class is used to publish messages in a RAAM channel. It also provides the m
 * [RAAM](#RAAM) ⇐ [<code>RAAMReader</code>](#RAAMReader)
     * [new RAAM(leafs, hashes, [options])](#new_RAAM_new)
     * _instance_
+        * [.createMessageTransfers(message, [options])](#RAAM+createMessageTransfers) ⇒ [<code>MessageTransfers</code>](#MessageTransfers)
+        * [.publishMessageTransfers(transfers, [options])](#RAAM+publishMessageTransfers) ⇒ <code>Promise</code>
         * [.publish(message, [options])](#RAAM+publish) ⇒ <code>Promise</code>
         * [.syncChannel([options])](#RAAMReader+syncChannel) ⇒ <code>Promise</code>
         * [.fetch([options])](#RAAMReader+fetch) ⇒ <code>Promise</code>
@@ -73,6 +81,44 @@ This class is used to publish messages in a RAAM channel. It also provides the m
 | [options.iota] | <code>API</code> | A composed IOTA API for communication with a full node providing POW. |
 | [options.channelPassword] | <code>Trytes</code> | The optional password for the channel as trytes. |
 
+<a name="RAAM+createMessageTransfers"></a>
+
+### raam.createMessageTransfers(message, [options]) ⇒ [<code>MessageTransfers</code>](#MessageTransfers)
+Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payloadof the message into transaction transfers.
+
+**Kind**: instance method of [<code>RAAM</code>](#RAAM)  
+**Throws**:
+
+- - if message isn't formatted as trytes.- if index is not between zero and the maximal index of the channel.- if a message was already found at this index.
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| message | <code>Trytes</code> |  | The message to attach to the channel as trytes. |
+| [options] | <code>object</code> |  | Optional parameters. |
+| [options.index] | <code>number</code> | <code>this.cursor</code> | The index of the message in the channel. |
+| [options.tag] | <code>Trytes</code> | <code>&#x27;RAAM&#x27;</code> | Tag |
+| [options.messagePassword] | <code>Trytes</code> |  | The password to encrypt this message with. |
+| [options.nextRoot] | <code>Int8Array</code> |  | The root of another channel, used for branching or when channel is exausted. |
+
+<a name="RAAM+publishMessageTransfers"></a>
+
+### raam.publishMessageTransfers(transfers, [options]) ⇒ <code>Promise</code>
+Takes transaction transfers and converts them into a transaction bundle, which is then attached to the tangle. POW is done remotely. Increases the cursor, so that it points to the next index where a message can be attached.
+
+**Kind**: instance method of [<code>RAAM</code>](#RAAM)  
+**Fulfil**: <code>Trytes</code> - The bundle hash of the attached message.  
+**Reject**: <code>Error</code> - if message is too long  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| transfers | <code>Array.&lt;Transfer&gt;</code> |  | The array of transfers forming the transactions of a IOTA bundle. |
+| [options] | <code>object</code> |  | Optional parameters. |
+| [options.message] | [<code>Message</code>](#Message) |  | The compiled RAAM message with all neccessary information to create its transfers. |
+| [options.depth] | <code>number</code> | <code>3</code> | Depth |
+| [options.mwm] | <code>number</code> | <code>14</code> | Min weight magnitude |
+| [options.iota] | <code>API</code> | <code>this.iota</code> | A composed IOTA API for communication with a full node providing POW. |
+
 <a name="RAAM+publish"></a>
 
 ### raam.publish(message, [options]) ⇒ <code>Promise</code>
@@ -80,7 +126,7 @@ Compiles the authentication path and a signature using the correct signing key. 
 
 **Kind**: instance method of [<code>RAAM</code>](#RAAM)  
 **Fulfil**: <code>Trytes</code> - The bundle hash of the attached message.  
-**Reject**: <code>Error</code> - if message isn't formatted as trytes.- if index is not between zero and the maximal index of the channel.- if a message was already found at this index.  
+**Reject**: <code>Error</code> - if message is too long- if message isn't formatted as trytes.- if index is not between zero and the maximal index of the channel.- if a message was already found at this index.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -382,6 +428,38 @@ An object representing a node of a merkle tree with a hash, and the position of 
 | hash | <code>Int8Array</code> | The hash of the direct children of this node in the merkle tree as trits. |
 | index | <code>number</code> | The index in the level of the merkle tree from left to right. |
 | height | <code>number</code> | The level of the node in the merkle tree. |
+
+<a name="MessageTransfers"></a>
+
+## MessageTransfers : <code>object</code>
+An object representing a message as transfers for a iota transaction bundle.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| transfers | <code>Array.&lt;Transfer&gt;</code> | The array of transfers forming the transactions of a IOTA bundle. |
+| message | [<code>Message</code>](#Message) | The compiled RAAM message with all neccessary information to create its transfers. |
+
+<a name="Message"></a>
+
+## Message : <code>object</code>
+An object representing the compiled RAAM message with all neccessary information to create its transfers.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | The index of the message in the channel. |
+| height | <code>number</code> | A number between 2 and 26 representing the height  of the merkle tree used for this channel. |
+| security | <code>number</code> | The security of the signing and encryption keys as a number between 1 and 4. |
+| message | <code>Trytes</code> | The message to attach to the channel as trytes. |
+| signature | <code>Int8Array</code> | The signature created from the message digest with signing key from the merkle tree. |
+| verifyingKey | <code>Int8Array</code> | The key to verify the signature and to verify its membership of the merkle tree. |
+| authPathHashes | <code>Array.&lt;Int8Array&gt;</code> | The other merkle tree nodes to rebuild the merkle root. |
+| nextRoot | <code>Int8Array</code> | The root of another channel, used for branching or when channel is exausted. |
 
 <a name="ProgressCallback"></a>
 
