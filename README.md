@@ -23,6 +23,7 @@ For that only the channel id and the index of the message are needed.
 - [x] private mode with channel password
 - [x] encrypting different messages with different passwords
 - [x] subscribing to new messages in channel
+- [x] constructing messages and publishing them later
 - [x] channel branching
 
 RAAM enables messaging for a variety of use cases which need privacy and integrity for data communication. This includes
