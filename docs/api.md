@@ -104,7 +104,7 @@ Compiles the authentication path and a signature using the correct signing key. 
 <a name="RAAM+publishMessageTransfers"></a>
 
 ### raam.publishMessageTransfers(transfers, [options]) ⇒ <code>Promise</code>
-Takes transaction transfers and converts them into a transaction bundle, which is then attached to the tangle. POW is done remotely. Increases the cursor, so that it points to the next index where a message can be attached.
+Takes transaction transfers and converts them into a transaction bundle, which is then attached to the tangle. POW is done remotely. Increases the cursor, so that it points to the next index where a message can be attached. Message is stored locally after publishing.
 
 **Kind**: instance method of [<code>RAAM</code>](#RAAM)  
 **Fulfil**: <code>Trytes</code> - The bundle hash of the attached message.  
@@ -114,7 +114,7 @@ Takes transaction transfers and converts them into a transaction bundle, which i
 | --- | --- | --- | --- |
 | transfers | <code>Array.&lt;Transfer&gt;</code> |  | The array of transfers forming the transactions of a IOTA bundle. |
 | [options] | <code>object</code> |  | Optional parameters. |
-| [options.message] | [<code>Message</code>](#Message) |  | The compiled RAAM message with all neccessary information to create its transfers. |
+| [options.message] | [<code>Message</code>](#Message) |  | The compiled RAAM message with all neccessary information to create its transfers. If it's passed message will be stored locally after publishing. |
 | [options.depth] | <code>number</code> | <code>3</code> | Depth |
 | [options.mwm] | <code>number</code> | <code>14</code> | Min weight magnitude |
 | [options.iota] | <code>API</code> | <code>this.iota</code> | A composed IOTA API for communication with a full node providing POW. |
@@ -122,7 +122,7 @@ Takes transaction transfers and converts them into a transaction bundle, which i
 <a name="RAAM+publish"></a>
 
 ### raam.publish(message, [options]) ⇒ <code>Promise</code>
-Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payloadof the message into a transaction bundle, which is then attached to the tangle. POW is done remotely.Increases the cursor, so that it points to the next index where a message can be attached.
+Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payloadof the message into a transaction bundle, which is then attached to the tangle. POW is done remotely.Increases the cursor, so that it points to the next index where a message can be attached.  Message is stored locally after publishing.
 
 **Kind**: instance method of [<code>RAAM</code>](#RAAM)  
 **Fulfil**: <code>Trytes</code> - The bundle hash of the attached message.  

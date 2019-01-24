@@ -32,8 +32,9 @@ const iota = require('@iota/core').composeAPI({
         console.log("Bundle 2:", await raam.publish("", {index: 3, messagePassword: messagePasswords[2], nextRoot}))
 
         let response = await raam.fetch({end: 3, messagePasswords})
-        response.errors.forEach(e => console.error(e))
         console.log("Messages:", response.messages)
+        response.errors.forEach(e => console.error(e))
+        response.skipped.forEach(s => console.error(s))
         
         const branch = new RAAMReader(response.branches[3], {iota})
         console.log("Branch security:", branch.security)
@@ -41,15 +42,19 @@ const iota = require('@iota/core').composeAPI({
         console.log("Branch messages:", response.messages)
 
         const reader = new RAAMReader(raam.channelRoot, {iota, channelPassword: "PASSWORD"})
+        // fetching will stop after index 1 because it is empty and reader has no locally stored messages
+        // messages will be empty
         response = await reader.fetch({start: 1, messagePasswords})
-        response.errors.forEach(e => console.error(e))
         console.log("Messages:", response.messages)
+        response.errors.forEach(e => console.error(e))
+        response.skipped.forEach(s => console.error(s))
 
         console.log("Bundle 3:", await raam.publish("SECONDMESSAGE", {index: 1, messagePassword: messagePasswords[1]}))
 
-        
         response = await reader.fetch({index: 1, messagePasswords})
         console.log("Message:", response.messages)
+        response.errors.forEach(e => console.error(e))
+        response.skipped.forEach(s => console.error(s))
     } catch(e) {
         console.error(e)
     }

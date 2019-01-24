@@ -1,6 +1,7 @@
 const RAAM = require('../lib/raam')
 const prettify = require('../lib/helpers').prettify
 const RAAMReader = require('../lib/raamReader')
+const converter =  require("@iota/converter")
 const iota = require('@iota/core').composeAPI({
     provider: 'https://nodes.devnet.iota.org'
 });
@@ -37,6 +38,7 @@ const iota = require('@iota/core').composeAPI({
         console.log("Published Messages:", response.messages)
 
         console.log("Publishing created messages...")
+        // if optional parameter message is passed, message is stored locally after publishing
         console.log("Bundle 1:", await raam.publishMessageTransfers(mt1.transfers, {message: mt1.message}))
         console.log("Bundle 2:", await raam.publishMessageTransfers(mt2.transfers, {message: mt2.message}))
 
