@@ -1,6 +1,6 @@
 {
   "name": "raam.client.js",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A messaging protocol for the IOTA tangle allowing access of arbitrary messages in O(1)",
   "keywords": [
     "iota",
@@ -24,13 +24,14 @@
   },
   "license": "ISC",
   "main": "lib/raam.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "docs": "jsdoc2md -t jsdoc2md/api.hbs lib/raam.js lib/raamReader.js > docs/api.md"
   },
   "dependencies": {
-    "@iota/core": "^1.0.0-beta.5",
-    "@iota/signing": "^1.0.0-beta.5",
-    "@iota/validators": "^1.0.0-beta.5",
+    "@iota/core": "^1.0.0-beta.11",
+    "@iota/signing": "^1.0.0-beta.11",
+    "@iota/validators": "^1.0.0-beta.11",
     "zeromq": "^5.1.0"
   },
   "devDependencies": {

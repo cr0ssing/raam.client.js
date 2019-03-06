@@ -50,7 +50,7 @@ await raam.publish("HELLOIOTA")
 
 **Reading from a channel**
 ```js
-const RAAMReader = require('raam.client.js/lib/raamReader')
+const { RAAMReader } = require('raam.client.js')
 const channelId = "TIGXUEKKCGTOPNXEIGUYQCJUCODSVAXVHZRARCWRAOVCZKN9WDILGKRIDAXBJSACGDWTTVBEOIZHQTSYX"
 const raam = new RAAMReader(channelId, {iota})
 let response = await raam.fetch({index: 3})
