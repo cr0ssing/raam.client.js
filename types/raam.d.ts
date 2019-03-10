@@ -46,7 +46,7 @@ export class MessageTransfers {
  * An object representing the compiled RAAM message with all neccessary information to create its transfers.
  * @typedef {object} Message
  * @property {number} index - The index of the message in the channel.
- * @property {number} height - A number between 2 and 26 representing the height 
+ * @property {number} height - A number between 1 and 26 representing the height 
  * of the merkle tree used for this channel.
  * @property {number} security - The security of the signing and encryption keys as a number between 1 and 4. 
  * @property {Trytes} message - The message to attach to the channel as trytes.
@@ -178,7 +178,7 @@ export class RAAM extends RAAMReader {
      * @param {Trytes} seed - The seed from which the signing keys are created.
      * @param {object} [options] - Optional parameters.
      * @param {number} [options.amount] - The maximum amount of messages that can be published in this channel.
-     * @param {number} [options.height = Math.ceil(Math.log2(amount))] - A number between 2 and 26 representing the height 
+     * @param {number} [options.height = Math.ceil(Math.log2(amount))] - A number between 1 and 26 representing the height 
      * of the merkle tree used for this channel.
      * @param {API} [options.iota = this.iota] - A composed IOTA API for communication with a full node providing POW.
      * @param {Trytes} [options.channelPassword] - The optional password for the channel as trytes.
@@ -207,7 +207,7 @@ export class RAAM extends RAAMReader {
      * @param {API} [options.iota = this.iota] - A composed IOTA API for communication with a full node providing POW.
      * @param {Trytes} [options.channelPassword] - The optional password for the channel as trytes.
      * @param {number} [options.amount] - The maximum amount of messages that can be published in this channel.
-     * @param {number} [options.height = Math.ceil(Math.log2(amount))] - A number between 2 and 26 representing the height 
+     * @param {number} [options.height = Math.ceil(Math.log2(amount))] - A number between 1 and 26 representing the height 
      * of the merkle tree used for this channel.
      * @param {Trytes} [options.seed] - The seed from which the signing keys are created.
      * @param {number} [options.offset = 0] - The starting index used for building the subroots from which the keys are created.

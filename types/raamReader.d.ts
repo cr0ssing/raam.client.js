@@ -126,7 +126,7 @@ export class RAAMReader {
      * This is parameter is only used as an extra verification information.
      * @param {number} [options.amount] - The maximum amount of messages in this channel. 
      * From this the height of the channel can be calculated. This is parameter is only used as an extra verification information.
-     * @param {number} [options.height] - The height as a number between 2 and 26 of the channel yielding the maximum 
+     * @param {number} [options.height] - The height as a number between 1 and 26 of the channel yielding the maximum 
      * amount of messages of the channel. This is parameter is only used as an extra verification information.
      */
     public constructor(channelRoot: Int8Array, {iota, channelPassword, security, 
@@ -239,7 +239,7 @@ export class RAAMReader {
      * different messages. The ith element is the password for the ith message in the channel.
      * @param {number} [options.security] - The security of the signing and encryption keys as a number between 1 and 4. 
      * This is parameter is only used as an extra verification information.
-     * @param {number} [options.height] - The height as a number between 2 and 26 of the channel yielding the maximum 
+     * @param {number} [options.height] - The height as a number between 1 and 26 of the channel yielding the maximum 
      * amount of messages of the channel. This is parameter is only used as an extra verification information.
      * 
      * @returns {Promise}
@@ -264,7 +264,7 @@ export class RAAMReader {
      * the found message.
      * @param {number} [options.security] - The security of the signing and encryption keys as a number between 1 and 4. 
      * This is parameter is only used as an extra verification information.
-     * @param {number} [options.height] - The height as a number between 2 and 26 of the channel yielding the maximum 
+     * @param {number} [options.height] - The height as a number between 1 and 26 of the channel yielding the maximum 
      * amount of messages of the channel. This is parameter is only used as an extra verification information.
      * 
      * @returns {Promise}
@@ -295,7 +295,7 @@ export class RAAMReader {
      * the found message.
      * @param {number} [options.security] - The security of the signing and encryption keys as a number between 1 and 4. 
      * This is parameter is only used as an extra verification information.
-     * @param {number} [options.height] - The height as a number between 2 and 26 of the channel yielding the maximum 
+     * @param {number} [options.height] - The height as a number between 1 and 26 of the channel yielding the maximum 
      * amount of messages of the channel. This is parameter is only used as an extra verification information.
      * 
      * @returns {Subscription} An object containing information about the created subscription, including the 
