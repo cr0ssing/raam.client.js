@@ -27,9 +27,9 @@ const iota = require('@iota/core').composeAPI({
         console.log("Messages:", messages)
 
         console.log("Publishing 2 messages...")
-        console.log("Bundle 1:", await raam.publish("HELLOIOTA", {messagePassword: messagePasswords[0]}))
+        console.log("Bundle 1:", (await raam.publish("HELLOIOTA", {messagePassword: messagePasswords[0]}))[0].bundle)
         const {channelRoot: nextRoot} = await RAAM.fromSeed(generateSeed(), {security: 1, height: 2})
-        console.log("Bundle 2:", await raam.publish("", {index: 3, messagePassword: messagePasswords[2], nextRoot}))
+        console.log("Bundle 2:", (await raam.publish("", {index: 3, messagePassword: messagePasswords[2], nextRoot}))[0].bundle)
 
         let response = await raam.fetch({end: 3, messagePasswords})
         console.log("Messages:", response.messages)
@@ -49,7 +49,7 @@ const iota = require('@iota/core').composeAPI({
         response.errors.forEach(e => console.error(e))
         response.skipped.forEach(s => console.error(s))
 
-        console.log("Bundle 3:", await raam.publish("SECONDMESSAGE", {index: 1, messagePassword: messagePasswords[1]}))
+        console.log("Bundle 3:", (await raam.publish("SECONDMESSAGE", {index: 1, messagePassword: messagePasswords[1]}))[0].bundle)
 
         response = await reader.fetch({index: 1, messagePasswords})
         console.log("Message:", response.messages)

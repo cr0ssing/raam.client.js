@@ -39,8 +39,8 @@ const iota = require('@iota/core').composeAPI({
 
         console.log("Publishing created messages...")
         // if optional parameter message is passed, message is stored locally after publishing
-        console.log("Bundle 1:", await raam.publishMessageTransfers(mt1.transfers, {message: mt1.message}))
-        console.log("Bundle 2:", await raam.publishMessageTransfers(mt2.transfers, {message: mt2.message}))
+        console.log("Bundle 1:", (await raam.publishMessageTransfers(mt1.transfers, {message: mt1.message}))[0].bundle)
+        console.log("Bundle 2:", (await raam.publishMessageTransfers(mt2.transfers, {message: mt2.message}))[0].bundle)
 
         const reader = new RAAMReader(raam.channelRoot, {iota, channelPassword: "PASSWORD"})
         response = await reader.fetch({end: 3})

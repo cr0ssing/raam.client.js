@@ -132,7 +132,7 @@ export class RAAM extends RAAMReader {
      * @param {API} [options.iota = this.iota] - A composed IOTA API for communication with a full node providing POW.
      * 
      * @returns {Promise}
-     * @fulfil {Hash} - The bundle hash of the attached message.
+     * @fulfil {Transaction[]} - The bundle of the attached message.
      * @reject {Error} 
      * - if message is too long
      */
@@ -156,7 +156,7 @@ export class RAAM extends RAAMReader {
      * @param {Int8Array} [options.nextRoot] - The root of another channel, used for branching or when channel is exausted.
      *
      * @returns {Promise}
-     * @fulfil {Hash} - The bundle hash of the attached message.
+     * @fulfil {Transaction[]} - The bundle of the attached message.
      * @reject {Error} 
      * - if message is too long
      * - if message isn't formatted as trytes.
