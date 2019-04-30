@@ -1,5 +1,5 @@
 import {API} from '@iota/core';
-import {Trytes, Transfer, Hash} from '@iota/core/typings/types';
+import {Trytes, Transfer, Hash, Transaction} from '@iota/core/typings/types';
 import {RAAMReader, Security} from './raamReader';
 
 /**
@@ -137,7 +137,7 @@ export class RAAM extends RAAMReader {
      * - if message is too long
      */
     public publishMessageTransfers(transfers: Transfer[], {message, depth, mwm, iota}?: 
-        {message?: Message, depth?: number, mwm?: number, iota?: API}): Promise<Hash>;
+        {message?: Message, depth?: number, mwm?: number, iota?: API}): Promise<Transaction[]>;
 
         /**
      * Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payload
@@ -165,7 +165,7 @@ export class RAAM extends RAAMReader {
      */
     public publish(message: Trytes, {index, tag , depth, mwm , iota, messagePassword, nextRoot}?: 
         {index?: number, tag?: Trytes, depth?: number, mwm?: number, iota?: API, 
-            messagePassword?: Trytes, nextRoot?: Int8Array}): Promise<Hash>;
+            messagePassword?: Trytes, nextRoot?: Int8Array}): Promise<Transaction[]>;
     
     /**
      * Creates a RAAM channel from a seed. For that a merkle tree is created consisting of all one-time signing keys that
