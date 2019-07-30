@@ -21,6 +21,7 @@ For that only the channel id and the index of the message are needed.
 - [x] authentication (proof of authorship) and spam protection of channels
 - [x] 4 different security levels
 - [x] private mode with channel password
+- [x] public mode with finding messages by address
 - [x] encrypting different messages with different passwords
 - [x] subscribing to new messages in channel
 - [x] constructing messages and publishing them later

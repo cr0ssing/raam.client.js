@@ -59,6 +59,8 @@ const iota = require('@iota/core').composeAPI({
         const {bundle} = await sender.sendMessage(iota, merkleRoot, message, sig, index, verifyingKey, authPathHashes, {channelPassword, nextRoot})
         console.log("Bundle:", bundle[0].bundle)
 
+        // sleep two seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
         console.log("Getting message...")
         const {message: tangleMessage, skipped} = await sender.getMessage(iota, merkleRoot, index, {channelPassword, height, security})
         skipped.forEach(e => console.error(`Bundle ${e.bundle} -`, e.error))

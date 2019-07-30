@@ -101,6 +101,26 @@ export class RAAM extends RAAMReader {
 
     /**
      * Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payload
+     * of the message into transaction transfers. This message can be decoded by only using its address.
+     * 
+     * @param {Trytes} message - The message to attach to the channel as trytes.
+     * @param {object} [options] - Optional parameters.
+     * @param {number} [options.index = this.cursor] - The index of the message in the channel.
+     * @param {Trytes} [options.tag = 'RAAM'] - Tag
+     * @param {Int8Array} [options.nextRoot] - The root of another channel, used for branching or when channel is exausted.
+     *
+     * @returns {MessageTransfers} 
+     * @throws
+     * - if message isn't formatted as trytes.
+     * - if index is not between zero and the maximal index of the channel.
+     * - if a message was already found at this index.
+     * - if channel password is set.
+     */
+    public createPublicMessageTransfers(message: Trytes, {index, tag, nextRoot}?: 
+        {index?: number, tag?: Trytes, nextRoot?: Int8Array}): MessageTransfers;
+
+    /**
+     * Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payload
      * of the message into transaction transfers.
      * 
      * @param {Trytes} message - The message to attach to the channel as trytes.
@@ -139,7 +159,34 @@ export class RAAM extends RAAMReader {
     public publishMessageTransfers(transfers: Transfer[], {message, depth, mwm, iota}?: 
         {message?: Message, depth?: number, mwm?: number, iota?: API}): Promise<Transaction[]>;
 
-        /**
+    /**
+     * Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payload
+     * of the message into a transaction bundle, which is then attached to the tangle. POW is done remotely.
+     * Increases the cursor, so that it points to the next index where a message can be attached.  Message is stored 
+     * locally after publishing. This message can be decoded by only using its address.
+     * 
+     * @param {Trytes} message - The message to attach to the channel as trytes.
+     * @param {object} [options] - Optional parameters.
+     * @param {number} [options.index = this.cursor] - The index of the message in the channel.
+     * @param {Trytes} [options.tag = 'RAAM'] - Tag
+     * @param {number} [options.depth = 3] - Depth
+     * @param {number} [options.mwm = 14] - Min weight magnitude
+     * @param {API} [options.iota = this.iota] - A composed IOTA API for communication with a full node providing POW.
+     * @param {Int8Array} [options.nextRoot] - The root of another channel, used for branching or when channel is exausted.
+     *
+     * @returns {Promise}
+     * @fulfil {Transaction[]} - The bundle of the attached message.
+     * @reject {Error} 
+     * - if message is too long
+     * - if message isn't formatted as trytes.
+     * - if index is not between zero and the maximal index of the channel.
+     * - if a message was already found at this index.
+     * - if channel password is set.
+     */
+    public publishPublic(message: Trytes, {index, tag, depth, mwm, iota, nextRoot}?: 
+        {index?: number, tag?: Trytes, depth?: number, mwm?: number, iota?: API, nextRoot?: Int8Array}): Promise<Transaction[]>;
+
+    /**
      * Compiles the authentication path and a signature using the correct signing key. Converts the encrypted payload
      * of the message into a transaction bundle, which is then attached to the tangle. POW is done remotely.
      * Increases the cursor, so that it points to the next index where a message can be attached.  Message is stored 

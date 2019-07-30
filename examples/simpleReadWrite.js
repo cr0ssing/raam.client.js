@@ -42,6 +42,8 @@ const iota = require('@iota/core').composeAPI({
         console.log("Branch messages:", response.messages)
 
         const reader = new RAAMReader(raam.channelRoot, {iota, channelPassword: "PASSWORD"})
+        // sleep two seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
         // fetching will stop after index 1 because it is empty and reader has no locally stored messages
         // messages will be empty
         response = await reader.fetch({start: 1, messagePasswords})
@@ -51,6 +53,8 @@ const iota = require('@iota/core').composeAPI({
 
         console.log("Bundle 3:", (await raam.publish("SECONDMESSAGE", {index: 1, messagePassword: messagePasswords[1]}))[0].bundle)
 
+        // sleep two seconds
+        await new Promise(resolve => setTimeout(resolve, 2000))
         response = await reader.fetch({index: 1, messagePasswords})
         console.log("Message:", response.messages)
         response.errors.forEach(e => console.error(e))
